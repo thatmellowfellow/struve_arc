@@ -237,7 +237,7 @@
   		<div class="SideSubMenu">
   			<input type="radio" name="sidemenu" id="aboutProject">
   			<label for="aboutProject">О проекте</label>
-   			<a href="javascript:void(0)" id="myBtn" onclick="sasamba()">Миссия</a>
+   			<a href="javascript:void(0)" id="myBtn" onclick="openmodalwindow()">Миссия</a>
   			<a href="#">Команда</a>
   			<a href="#">Ход работ</a>
   		</div>
@@ -313,7 +313,7 @@
 	var span = document.getElementsByClassName('closeModalWindow')[0];
 
 	// When the user clicks the button, open the modal 
-	function sasamba() {
+	function openmodalwindow() {
 	    modal.style.display = "flex";
 	    modal.style.opacity = "1";
 	    modal.scrollTop = 0;
