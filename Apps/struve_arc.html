@@ -51,18 +51,15 @@
 
 		.SideMenu {
 			display: block;
-			height: 88%;
-			width: 200px;
-			z-index: 10;
+			height: 100%;
+			width: 0px;
+			z-index: 2;
 			position: fixed;
-			top: 5px;
-			left: -20%;
-			border-radius: 5px;
 			font-family: Helvetica;
 			background-color: var(--cesium-black);
 			padding-top: 40px;
 			overflow: hidden;
-			transition: left 0.2s ease-in;
+			transition: width 0.2s ease-in;
 		}
 
 		.SideMenu .SideSubMenu {
@@ -78,6 +75,7 @@
 			display: block;
 			font-size: 0;
 			padding: 0.25em 0.25em 0.25em 24px;
+			min-width: 200px;
 			line-height: 1.4;
 			text-transform: none;
 			text-decoration: none;
@@ -98,7 +96,6 @@
 			transition: color 100ms;
 		}
 
-
 		.SideMenu .SideSubMenu label {
 			display: block;
 			min-width: 200px;
@@ -114,7 +111,7 @@
 
 		.SideMenu .SideSubMenu label:hover {
 			font-size: 22px;
-		}		
+		}
 
 		#CloseButton {
 			position: absolute;
@@ -130,55 +127,52 @@
 			transition: color 100ms ease-in-out;
 		}
 
-		#CloseButton:hover {
-			color: white;
-		}
+		#CloseButton:hover { color: white; }
 
 		@media screen and (max-height: 450px) {
 			.SideMenu { padding-top: 15px; }
 			.SideMenu a { font-size: 18px; }
 		}
 
-			/* The Modal (background) */
+		/* Модульное окно (фон) */
 		.modal {
-		    display: none;
+		    display: flex;
 		    justify-content: center;
 		    align-items: center;
 		    box-sizing: border-box;
 		    position: fixed;
-		    z-index: 1;
+		    z-index: -1;
 		    left: 0;
 		    top: 0;
-		    opacity: 1;
+		    opacity: 0;
 		    padding-top: 4%;
 		    padding-bottom: 4%;
 		    width: 100%;
 		    height: 100%;
 		    overflow: auto; /* Enable scroll if needed */
-		    background-color: rgb(0,0,0);
-		    background-color: rgba(0,0,0,0.5);
+		    background-color: transparent;
 		    transition: opacity 0.4s
 		}
 
-		/* Modal Content */
-		.modalContent {
+		/* Модульное окно */
+		#modalContent {
 		    position: relative;
-		    display: flex;
-		    flex-direction: column;
-		    background-color: #fefefe;
+		    background-color: white;
 		    margin: auto;
 		    padding: 0;
 		    border-radius: 10px;
 		    width: 80%;
 		    height: 100%;
+		    top: -300px;
     		box-shadow: 0 0 40px 10px rgba(0,0,0,0.75);
-		    -webkit-animation-name: animatetop;
+		    /*-webkit-animation-name: animatetop;
 		    -webkit-animation-duration: 0.4s;
 		    animation-name: animatetop;
-		    animation-duration: 0.4s
+		    animation-duration: 0.4s;*/
+		    transition: top 0.4s;
 		}
 
-		/* Add Animation */
+		/* Add Animation
 		@-webkit-keyframes animatetop {
 		    from { top:-300px; opacity:0 } 
 		    to { top:0; opacity:1 }
@@ -187,12 +181,12 @@
 		@keyframes animatetop {
 		    from { top: -300px; opacity: 0 }		    
 		    to { top: 0; opacity: 1 }
-		}
+		} */
 
-		/* The Close Button */
+		/* Закрыть модульное окно */
 		.closeModalWindow {
 			position: absolute;
-			top: -15px;
+			top: -10px;
 			right: -40px;
 		    color: var(--cesium-white);
 		    opacity: 0.4;
@@ -225,6 +219,19 @@
 			width: 100%;
 			height: 100%;
 			border: 0;
+		} 
+		
+		#modalBackground {
+		    display: block;
+		    position: fixed;
+		    top: 0px;
+		    left: 0px;
+		    background-color: rgba(0,0,0,0.5);
+		    width: 100%;
+		    height: 100%;
+		    opacity: 0;
+		    z-index: -1;
+		    transition: opacity 400ms ease;
 		}
 
 	</style>
@@ -237,25 +244,25 @@
   		<div class="SideSubMenu">
   			<input type="radio" name="sidemenu" id="aboutProject">
   			<label for="aboutProject">О проекте</label>
-   			<a href="javascript:void(0)" id="myBtn" onclick="openmodalwindow()">Миссия</a>
-  			<a href="#">Команда</a>
-  			<a href="#">Ход работ</a>
+   			<a href="ModalWindows/Mission.html" target="modalIFrame" onclick="openModalWindow()">Миссия</a>
+  			<a href="ModalWindows/Team.html" target="modalIFrame" onclick="openModalWindow()">Команда</a>
+  			<a href="ModalWindows/Development.html" target="modalIFrame" onclick="openModalWindow()">Ход работ</a>
   		</div>
 
   		<div class="SideSubMenu">
   			<input type="radio" name="sidemenu" id="struve-arc">
   			<label for="struve-arc">Дуга Струве</label>
-   			<a href="#">О градусных измерениях</a>
-   			<a href="#">История</a>
-  			<a href="#">Руководители</a>
-  			<a href="#">Результаты</a>
+   			<a href="ModalWindows/AboutEarthMeasurements.html" target="modalIFrame" onclick="openModalWindow()">О градусных измерениях</a>
+   			<a href="ModalWindows/History.html" target="modalIFrame" onclick="openModalWindow()">История</a>
+  			<a href="ModalWindows/Leaders.html" target="modalIFrame" onclick="openModalWindow()">Руководители</a>
+  			<a href="ModalWindows/Results.html" target="modalIFrame" onclick="openModalWindow()">Результаты</a>
   		</div>  
 
   		<div class="SideSubMenu">
   			<input type="radio" name="sidemenu" id="events">
   			<label for="events">События</label>
-	        <a href="#">Конференции</a>
-	        <a href="#">Экспедиции</a>
+	        <a href="ModalWindows/Conferences.html" target="modalIFrame" onclick="openModalWindow()">Конференции</a>
+	        <a href="ModalWindows/Expeditions.html" target="modalIFrame" onclick="openModalWindow()">Экспедиции</a>
   		</div>  	
 
   		<div class="SideSubMenu">
@@ -264,83 +271,82 @@
 	        <a href="#">В.Я.Струве<br>"Дуга меридиана"</a>
 	        <a href="#">Литература</a>
   		</div>  	
-
   	</nav>
+
   	<span class="cesium-button" id="menubutton" onclick="openmenu()">&#9776;</span>
 
-
-
-	<!-- The Modal -->
 	<div id="modalWindow" class="modal">
-	  <!-- Modal content -->
-	  <div class="modalContent">
+	  <div id="modalContent">
 	    <!--<div class="modalHeader">
 	      <h2>Modal Header</h2>
 	    </div>-->
+	    <span class="closeModalWindow" onclick="disapp()">&times;</span>
 	    <div class="modalBody">
-	      <span class="closeModalWindow" onclick="disapp()">&times;</span>
-	      <iframe frameborder="0" allowfullscreen src="https://ru.wikipedia.org/wiki/%D0%94%D1%83%D0%B3%D0%B0_%D0%A1%D1%82%D1%80%D1%83%D0%B2%D0%B5"></iframe>
+	      <iframe frameborder="0" allowfullscreen src="" name="modalIFrame"></iframe>
 	    </div>
 	  </div>
 	</div>
+  	<div id="modalBackground"></div>
   </div>
 
   <script>
+
   	//Side navigation
-  	function openmenu() {
-  		document.getElementById("mySideMenu").style.left = "1%";
-  	}
-
-  	function closemenu() {
-  		document.getElementById("mySideMenu").style.left = "-20%";  	
- 	}
-
- 	function opensidemenu(menuName) {
- 			var x = document.getElementById(menuName).style;
- 			if (x.height == "100%") {
- 				x.height="0";
- 				} else {
- 					x.height="100%";
- 					}}
 
 	// Get the modal
 	var modal = document.getElementById('modalWindow');
+	var modalContent = document.getElementById('modalContent');
 
-	// Get the button that opens the modal
-	var btn = document.getElementById('myBtn');
+  	function openmenu() {
+  		document.getElementById("mySideMenu").style.width = "200px";
+    	document.getElementById("modalBackground").style.opacity = 1;
+    	document.getElementById("modalBackground").style.zIndex = "1";
+  	}
 
-	// Get the <span> element that closes the modal
-	var span = document.getElementsByClassName('closeModalWindow')[0];
+  	function closemenu() {
+  		document.getElementById("mySideMenu").style.width = "0";
+    	document.getElementById("modalBackground").style.opacity = 0;  
+    	setTimeout(function() {
+    		document.getElementById("modalBackground").style.zIndex = "-1";
+    	}, 400);	
+ 	}
+
+ 	/*function opensidemenu(menuName) {
+ 			var x = document.getElementById(menuName).style;
+ 			if (x.height == "100%") {
+ 				x.height="0";
+ 			} else {
+ 					x.height="100%";
+ 			}
+ 	}*/
 
 	// When the user clicks the button, open the modal 
-	function openmodalwindow() {
-	    modal.style.display = "flex";
-	    modal.style.opacity = "1";
+	function openModalWindow() {
 	    modal.scrollTop = 0;
-	  	document.getElementById("mySideMenu").style.left = "-20%"; 
-
+	    modal.style.zIndex = "2";
+	    modal.style.opacity = "1";
+	  	document.getElementById("mySideMenu").style.width = "0";
+	  	modalContent.style.top = "0"
 	}
 
-	// When the user clicks on <span> (x), close the modal
-	function closemodal_opacity() {
-	    modal.style.opacity = "0";
-	}
-
-	function closemodal_display() {
-		modal.style.display = "none";
-	    }
-	    
+	//Close the modal
 	function disapp() {
-		closemodal_opacity();
-		setTimeout(closemodal_display, 400);
-	    }
+	    modal.style.opacity = "0";
+		setTimeout(function() {
+			modal.style.zIndex = "-1";
+			modalContent.style.top = "-300px";
+    		document.getElementById("modalBackground").style.zIndex = "-1";
+	    }, 400);
+    	document.getElementById("modalBackground").style.opacity = 0; 
+	  	document.getElementById("mySideMenu").style.width = "0";
+	}
 	    
 	// When the user clicks anywhere outside of the modal, close it
 	window.onclick = function(event) {
-	    if (event.target == modal) {
-	    	disapp();
-	    }
+	    if (event.target == modal || event.target == document.getElementById("modalBackground")) disapp();
 	}
+
+
 
  	 //Cesium 
  	var viewer = new Cesium.Viewer('cesiumContainer', {imageryProvider : new Cesium.ArcGisMapServerImageryProvider({
@@ -357,7 +363,7 @@
   	//viewer.imageryLayers.addImageryProvider(new Cesium.IonImageryProvider({ assetId: 3813 }));
   
  	 // Create an initial camera view
-	var initialPosition = new Cesium.Cartesian3.fromDegrees(26.7200, 57.99333, 10000000);
+	var initialPosition = new Cesium.Cartesian3.fromDegrees(26.7200, 57.99333, 13000000);
 	var homeCameraView = {destination: initialPosition};
 	
  	 // Set the initial view
