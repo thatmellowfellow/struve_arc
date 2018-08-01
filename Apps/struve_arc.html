@@ -8,13 +8,13 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
 	<title>Геодезическая дуга Струве</title>
 	<script src="../Build/Cesium/Cesium.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 	<link rel="stylesheet" type="text/css" href="../Build/Cesium/Widgets/widgets.css">
 	<style type="text/css">
 		:root {
 			--cesium-white: #edffff;
 			--cesium-black: #0d0d0e;
 		}
-
 		html, body, #cesiumContainer {
 			width: 100%;
 			height: 100%;
@@ -22,7 +22,6 @@
 			padding: 0;
 			overflow: hidden;
 		}
-
 		h1 { 
 			font-family: calibri;
 			font-size: 14px;
@@ -32,12 +31,10 @@
 			margin-right: 0;
 			font-weight: bold;
 		}
-
 		p {
 			font-family: calibri;
 			margin-top: -1.0em;
 		}
-
 		#menubutton {
 			position: absolute;
 			top: 5px;
@@ -47,8 +44,6 @@
 			font-weight: bold;
 			border-radius: 2px;
 		}
-
-
 		.SideMenu {
 			display: block;
 			height: 100%;
@@ -61,16 +56,13 @@
 			overflow: hidden;
 			transition: width 0.2s ease-in;
 		}
-
 		.SideMenu .SideSubMenu {
 			display: block;
 			flex-direction: column;
 		}
-
 		.SideMenu .SideSubMenu input {
 			display: none;
 		}
-
 		.SideMenu .SideSubMenu a {
 			display: block;
 			font-size: 0;
@@ -84,18 +76,15 @@
 			transition: font-size 300ms 150ms ease-in, opacity 300ms 0ms ease-in, padding-top 300ms 150ms ease-in, padding-bottom 300ms 150ms ease-in;
 			cursor: pointer;
 		}		
-
 		.SideMenu .SideSubMenu input:checked ~ a {
 			font-size: 14px;
 			padding-left: 24px;
 			opacity: 1;
 		}
-
 		.SideMenu .SideSubMenu input:checked ~ a:hover {
 			color: white;
 			transition: color 100ms;
 		}
-
 		.SideMenu .SideSubMenu label {
 			display: block;
 			min-width: 200px;
@@ -108,11 +97,9 @@
 			cursor: pointer;
 			transition: font-size 100ms 0ms ease-in;			
 		}
-
 		.SideMenu .SideSubMenu label:hover {
 			font-size: 22px;
 		}
-
 		#CloseButton {
 			position: absolute;
 			top: 0;
@@ -126,14 +113,11 @@
 			text-align: right;
 			transition: color 100ms ease-in-out;
 		}
-
 		#CloseButton:hover { color: white; }
-
 		@media screen and (max-height: 450px) {
 			.SideMenu { padding-top: 15px; }
 			.SideMenu a { font-size: 18px; }
 		}
-
 		/* Модульное окно (фон) */
 		.modal {
 		    display: flex;
@@ -153,7 +137,6 @@
 		    background-color: transparent;
 		    transition: opacity 0.4s
 		}
-
 		/* Модульное окно */
 		#modalContent {
 		    position: relative;
@@ -171,18 +154,15 @@
 		    animation-duration: 0.4s;*/
 		    transition: top 0.4s;
 		}
-
 		/* Add Animation
 		@-webkit-keyframes animatetop {
 		    from { top:-300px; opacity:0 } 
 		    to { top:0; opacity:1 }
 		}
-
 		@keyframes animatetop {
 		    from { top: -300px; opacity: 0 }		    
 		    to { top: 0; opacity: 1 }
 		} */
-
 		/* Закрыть модульное окно */
 		.closeModalWindow {
 			position: absolute;
@@ -195,26 +175,22 @@
 			text-decoration: none;
 		    transition: opacity 0.15s ease-in-out;
 		}
-
 		.closeModalWindow:hover, .closeModalWindow:focus {
 			opacity: 0.9;
 		    cursor: pointer;
 		}
-
 		.modalHeader {
 			height: 10%;
 		    padding: 2px 16px;
 			background-color: var(--cesium-black);
 		    color: white;
 		}
-
 		.modalBody {
 			height: 100%;
 		    border-radius: 10px;
 		    transform: translateZ(0px);
 			overflow: hidden;
 		}
-
 		.modalBody > iframe {
 			width: 100%;
 			height: 100%;
@@ -233,7 +209,6 @@
 		    z-index: -1;
 		    transition: opacity 400ms ease;
 		}
-
 	</style>
 </head>
 <body>
@@ -268,8 +243,8 @@
   		<div class="SideSubMenu">
   			<input type="radio" name="sidemenu" id="sources">
   			<label for="sources">Источники</label>
-	        <a href="#">В.Я.Струве<br>"Дуга меридиана"</a>
-	        <a href="#">Литература</a>
+	        <a href="ModalWindows/ArcDuMeridien.html" target="modalIFrame" onclick="openModalWindow()">В.Я.Струве<br>"Дуга меридиана"</a>
+	        <a href="ModalWindows/References.html" target="modalIFrame" onclick="openModalWindow()">Литература</a>
   		</div>  	
   	</nav>
 
@@ -290,27 +265,24 @@
   </div>
 
   <script>
-
   	//Side navigation
-
 	// Get the modal
 	var modal = document.getElementById('modalWindow');
+	var modalBg = document.getElementById("modalBackground");
 	var modalContent = document.getElementById('modalContent');
-
+	var mySideMenu = document.getElementById('mySideMenu');
   	function openmenu() {
-  		document.getElementById("mySideMenu").style.width = "200px";
-    	document.getElementById("modalBackground").style.opacity = 1;
-    	document.getElementById("modalBackground").style.zIndex = "1";
+  		mySideMenu.style.width = "200px";
+    	modalBg.style.opacity = 1;
+    	modalBg.style.zIndex = "1";
   	}
-
   	function closemenu() {
-  		document.getElementById("mySideMenu").style.width = "0";
-    	document.getElementById("modalBackground").style.opacity = 0;  
+  		mySideMenu.style.width = "0";
+    	modalBg.style.opacity = 0;  
     	setTimeout(function() {
-    		document.getElementById("modalBackground").style.zIndex = "-1";
+    		modalBg.style.zIndex = "-1";
     	}, 400);	
  	}
-
  	/*function opensidemenu(menuName) {
  			var x = document.getElementById(menuName).style;
  			if (x.height == "100%") {
@@ -319,33 +291,30 @@
  					x.height="100%";
  			}
  	}*/
-
 	// When the user clicks the button, open the modal 
 	function openModalWindow() {
 	    modal.scrollTop = 0;
 	    modal.style.zIndex = "2";
 	    modal.style.opacity = "1";
-	  	document.getElementById("mySideMenu").style.width = "0";
+	  	mySideMenu.style.width = "0";
 	  	modalContent.style.top = "0"
 	}
-
 	//Close the modal
 	function disapp() {
 	    modal.style.opacity = "0";
 		setTimeout(function() {
 			modal.style.zIndex = "-1";
 			modalContent.style.top = "-300px";
-    		document.getElementById("modalBackground").style.zIndex = "-1";
+    		modalBg.style.zIndex = "-1";
 	    }, 400);
-    	document.getElementById("modalBackground").style.opacity = 0; 
-	  	document.getElementById("mySideMenu").style.width = "0";
+    	modalBg.style.opacity = 0; 
+	  	mySideMenu.style.width = "0";
 	}
 	    
 	// When the user clicks anywhere outside of the modal, close it
 	window.onclick = function(event) {
-	    if (event.target == modal || event.target == document.getElementById("modalBackground")) disapp();
+	    if (event.target == modal || event.target == modalBg) disapp();
 	}
-
 
 
  	 //Cesium 
@@ -389,12 +358,13 @@
     }
 	
 	//Adding lines
-	var lines = Cesium.GeoJsonDataSource.load('../sourcedata/lines_all.geojson');
+	var lines = Cesium.GeoJsonDataSource.load('../sourcedata/segments.geojson');
 	lines.then(function(dataSource2)   {
     viewer.dataSources.add(dataSource2);
     var sourceentities = dataSource2.entities.values;
     for (var i = 0; i < sourceentities.length; i++) {
-        var entity = sourceentities[i];
+		var entity = sourceentities[i];
+		entity.title = entity.properties.NAME_RU;
         entity.polyline.width = 1.5;
         entity.polyline.material = new Cesium.PolylineOutlineMaterialProperty({
                 color: Cesium.Color.FIREBRICK,
@@ -410,15 +380,15 @@
 	})
 	
 	//Addiing points
-	var points = Cesium.GeoJsonDataSource.load('../sourcedata/points_all.geojson');
+	var points = Cesium.GeoJsonDataSource.load('../sourcedata/points.geojson');
 	//var source;
 	points.then(function(dataSource)  {
     viewer.dataSources.add(dataSource);
     //source = dataSource.entities;
     var sourceentities = dataSource.entities.values;
-	var pathtotxt;
     for (var i = 0; i < sourceentities.length; i++) {
         var entity = sourceentities[i];
+		var pathtotxt = '../sourcedata/text/points/' + entity.properties.Name_by_St + '/' + entity.properties.Name_by_St +'.txt';	
         entity.name = 'Пункт триангуляции Геодезической Дуги Струве';
         entity.billboard = {
             image: unesco_or_not(entity),
@@ -430,13 +400,13 @@
 		else	entity.billboard.scaleByDistance = new Cesium.NearFarScalar(0, 0.05, 100000, 0.014);
 		
         entity.label = {
-            text: entity.properties.Name_by_St,
-            font: '14pt monospace',
+            text: entity.properties.Name_RU,
+            font: 'bold 16pt Helvetica',
             fillColor: Cesium.Color.White,
-            outlineColor: Cesium.Color.GREY,
+            outlineColor: Cesium.Color.BLACK,
             outlineWidth: 2,
 			style: Cesium.LabelStyle.FILL_AND_OUTLINE,
-			eyeOffset: new Cesium.Cartesian3(0, 0, -300),
+			eyeOffset: new Cesium.Cartesian3(0, 0, -550),
             showBackground: false,
             pixelOffset: new Cesium.Cartesian2(-8, 8),
             horizontalOrigin: Cesium.HorizontalOrigin.RIGHT,
@@ -445,23 +415,26 @@
 					
         entity.billboard.distanceDisplayCondition = new Cesium.DistanceDisplayCondition(0, 900000.0);
         entity.label.distanceDisplayCondition = new Cesium.DistanceDisplayCondition(0, 250000.0);
-		entity.img = '<img width="200" height=auto style="float:left; margin: 1.5em 1em 0 0;" src="../sourcedata/photos/points/' + entity.properties.Name_by_St + '/' + entity.properties.Name_by_St + '.jpg" alt="Нет изображения"/>';
-		entity.title = '<h1>' + entity.properties.Name_by_St + '</h1>';	
+		entity.img = '<img width="100%" height=auto style="float:left; margin: 1.5em 1em 0 0;" src="../sourcedata/photos/points/' + entity.properties.Name_by_St + '/' + entity.properties.Name_by_St + '.jpg" alt="Нет изображения"/>';
+		entity.title = '<h1>' + entity.properties.Name_RU + '</h1>';	
 		entity.latlong = '<p>Широта: ' + entity.properties.Lat_DMS + ' с.ш.</p>' + '<p>Долгота: ' + entity.properties.Lon_DMS + ' в.д.</p>';
 		entity.country = '<p>Государство: ' + entity.properties.Country + '</p>';
 		if (+entity.properties.UNESCO > 0) {
 				entity.unesco = 'Объект наследия ЮНЕСКО<br>'
-				} else {entity.unesco = ''}
-				
-		pathtotxt = '../sourcedata/text/points/' + entity.properties.Name_by_St + '/' + entity.properties.Name_by_St +'.txt';		
+				} else {entity.unesco = ''}					
 		//entity.source = '<p>Источник: <a style="color: WHITE" target="_blank" href="https://geoportal.rgo.ru/record/3825">В. Я. Струве. Дуга меридиана в 25°20\' между Дунаем и Ледовитым Морем.</a></p>';			
 		entity.source = '<p>Источник: <a style="color: WHITE" target="_blank" href="http://allworld-travel.com">All-World Travel</a></p>';			
-		//entity.body = '<p>Пункт Фельштин возле села Гвардейское Хмельницкой области расположен на одном из холмов, который доминирует над окружающей местностью. Сам геодезический знак, найденный по архивным материалам, расположен на глубине метра двадцати сантиметров. Это - обломок скалы, на котором есть зарубка и обозначения точных координат - долготы и широты. Этот пункт обустроили и сверху поставили памятный знак.</p>';
-		entity.body = '<object width="910" height="340" type="text/plain" data="../sourcedata/text/points/' + entity.properties.Name_by_St + '/' + entity.properties.Name_by_St + '.txt" border="0" style="overflow: scroll; color: WHITE; font-family: verdana;"></object>';
+		//entity.body = '<object width="910" height="340" type="text/plain" data="../sourcedata/text/points/' + entity.properties.Name_by_St + '/' + entity.properties.Name_by_St + '.txt" border="0" style="overflow: scroll; color: WHITE; font-family: verdana;"></object>';
+		
+		$.ajaxSetup({async: false});
+		$.get(pathtotxt, function(data) {
+			entity.body = data;
+			});    
+    	$.ajaxSetup({async: true}); 
+		if (entity.body == null) entity.body = '';
 		entity.description = entity.img + entity.title + entity.latlong + entity.country + entity.unesco + entity.body;
     }
 	}); 
-
   </script>
 </body>
 </html>
