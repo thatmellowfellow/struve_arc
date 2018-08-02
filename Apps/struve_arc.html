@@ -8,7 +8,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
 	<title>Геодезическая дуга Струве</title>
 	<script src="../Build/Cesium/Cesium.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 	<link rel="stylesheet" type="text/css" href="../Build/Cesium/Widgets/widgets.css">
 	<style type="text/css">
 		:root {
@@ -51,7 +51,11 @@
 			z-index: 2;
 			position: fixed;
 			font-family: Helvetica;
-			background-color: var(--cesium-black);
+			color: var(--cesium-white);
+			background-image: linear-gradient(rgba(0,0,0,0.8),rgba(0,0,0,0.8)), url(../sourcedata/coolpics/geodesists.png);
+			background-repeat: no-repeat;
+			background-size: auto 100%;
+			background-position: 75%;
 			padding-top: 40px;
 			overflow: hidden;
 			transition: width 0.2s ease-in;
@@ -89,7 +93,6 @@
 			display: block;
 			min-width: 200px;
 			padding: 0.5em 1em;
-			color: var(--cesium-white);
 			font-family: Helvetica;
 			font-size: 20px;
 			font-weight: 600;
@@ -315,8 +318,6 @@
 	window.onclick = function(event) {
 	    if (event.target == modal || event.target == modalBg) disapp();
 	}
-
-
  	 //Cesium 
  	var viewer = new Cesium.Viewer('cesiumContainer', {imageryProvider : new Cesium.ArcGisMapServerImageryProvider({
 		url: '//services.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer',
@@ -419,20 +420,17 @@
 		entity.title = '<h1>' + entity.properties.Name_RU + '</h1>';	
 		entity.latlong = '<p>Широта: ' + entity.properties.Lat_DMS + ' с.ш.</p>' + '<p>Долгота: ' + entity.properties.Lon_DMS + ' в.д.</p>';
 		entity.country = '<p>Государство: ' + entity.properties.Country + '</p>';
-		if (+entity.properties.UNESCO > 0) {
-				entity.unesco = 'Объект наследия ЮНЕСКО<br>'
-				} else {entity.unesco = ''}					
+		if (+entity.properties.UNESCO > 0) entity.unesco = 'Объект наследия ЮНЕСКО<br>';
+		else entity.unesco = '';
 		//entity.source = '<p>Источник: <a style="color: WHITE" target="_blank" href="https://geoportal.rgo.ru/record/3825">В. Я. Струве. Дуга меридиана в 25°20\' между Дунаем и Ледовитым Морем.</a></p>';			
 		entity.source = '<p>Источник: <a style="color: WHITE" target="_blank" href="http://allworld-travel.com">All-World Travel</a></p>';			
 		//entity.body = '<object width="910" height="340" type="text/plain" data="../sourcedata/text/points/' + entity.properties.Name_by_St + '/' + entity.properties.Name_by_St + '.txt" border="0" style="overflow: scroll; color: WHITE; font-family: verdana;"></object>';
 		
 		$.ajaxSetup({async: false});
-		$.get(pathtotxt, function(data) {
-			entity.body = data;
-			});    
+		$.get(pathtotxt, function(data) {entity.body = data;});    
     	$.ajaxSetup({async: true}); 
-		if (entity.body == null) entity.body = '';
-		entity.description = entity.img + entity.title + entity.latlong + entity.country + entity.unesco + entity.body;
+		entity.description = entity.img + entity.title + entity.latlong + entity.country + entity.unesco;
+		if (typeof(entity.body) != 'undefined') entity.description += entity.body;
     }
 	}); 
   </script>
