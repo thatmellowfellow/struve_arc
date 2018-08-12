@@ -4,17 +4,21 @@
 	<link rel="icon" href="https://cdn0.iconfinder.com/data/icons/Junior/128/Junior_Icon_04_2.png">
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<!-- Make the application on mobile take up the full browser screen and disable user scaling. -->
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
 	<title>Геодезическая дуга Струве</title>
 	<script src="../Build/Cesium/Cesium.js"></script>
-    	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 	<link rel="stylesheet" type="text/css" href="../Build/Cesium/Widgets/widgets.css">
 	<style type="text/css">
 		:root {
 			--cesium-white: #edffff;
 			--cesium-black: #0d0d0e;
 		}
+
+		* {
+			font-family: Helvetica;
+		}
+
 		html, body, #cesiumContainer {
 			width: 100%;
 			height: 100%;
@@ -23,7 +27,7 @@
 			overflow: hidden;
 		}
 		h1 { 
-			font-family: calibri;
+			/*font-family: Helvetica;*/
 			font-size: 14px;
 			margin-top: 0em;
 			margin-bottom: 3.0em;
@@ -32,7 +36,7 @@
 			font-weight: bold;
 		}
 		p {
-			font-family: calibri;
+			/*font-family: Helvetica;*/
 			margin-top: -1.0em;
 		}
 		#menubutton {
@@ -42,7 +46,6 @@
 			z-index: 1;
 			font-size: 18px;
 			font-weight: bold;
-			border-radius: 2px;
 		}
 		.SideMenu {
 			display: block;
@@ -50,16 +53,31 @@
 			width: 0px;
 			z-index: 2;
 			position: fixed;
-			font-family: Helvetica;
+			/*font-family: Helvetica;*/
 			color: var(--cesium-white);
-			background-image: linear-gradient(rgba(0,0,0,0.8),rgba(0,0,0,0.8)), url(../sourcedata/coolpics/geodesists.png);
+			background-image: linear-gradient(rgba(0,0,0,0.8),rgba(0,0,0,0.8)), url(../sourcedata/bg-images/geodesists.jpg);
 			background-repeat: no-repeat;
 			background-size: auto 100%;
-			background-position: 75%;
 			padding-top: 40px;
 			overflow: hidden;
 			transition: width 0.2s ease-in;
+			animation-name: bg-image-move, fade;
+			animation-duration: 10s, 10s;
+			animation-iteration-count: infinite, infinite;
+			animation-timing-function: linear, linear;
 		}
+
+		@keyframes bg-image-move {
+			from {background-position: 75% 100%;}
+			to {background-position: 10% 0%;}
+		}
+
+		@keyframes fade {
+			0% {opacity: 1;}
+			80% {opacity: 1;}
+			100% {opacity: 0;}
+		}
+
 		.SideMenu .SideSubMenu {
 			display: block;
 			flex-direction: column;
@@ -93,7 +111,7 @@
 			display: block;
 			min-width: 200px;
 			padding: 0.5em 1em;
-			font-family: Helvetica;
+			/*font-family: Helvetica;*/
 			font-size: 20px;
 			font-weight: 600;
 			text-transform: uppercase;
@@ -151,22 +169,9 @@
 		    height: 100%;
 		    top: -300px;
     		box-shadow: 0 0 40px 10px rgba(0,0,0,0.75);
-		    /*-webkit-animation-name: animatetop;
-		    -webkit-animation-duration: 0.4s;
-		    animation-name: animatetop;
-		    animation-duration: 0.4s;*/
 		    transition: top 0.4s;
 		}
-		/* Add Animation
-		@-webkit-keyframes animatetop {
-		    from { top:-300px; opacity:0 } 
-		    to { top:0; opacity:1 }
-		}
-		@keyframes animatetop {
-		    from { top: -300px; opacity: 0 }		    
-		    to { top: 0; opacity: 1 }
-		} */
-		/* Закрыть модульное окно */
+
 		.closeModalWindow {
 			position: absolute;
 			top: -10px;
@@ -212,6 +217,48 @@
 		    z-index: -1;
 		    transition: opacity 400ms ease;
 		}
+
+		#dropdown {
+			position: absolute;
+			top: 5px;
+			left: 70px;
+			color: var(--cesium-white);
+			cursor: pointer;
+			z-index: 1;
+		}
+
+		#dropdown img {
+			width: auto;
+			height: 20px;
+		}
+
+		#dropdown-content {
+			overflow: hidden;
+			height: 0px;
+			transition: height 0.2s;
+		}
+
+		#dropdown-content input {
+			display: none;
+		}
+
+		#dropdown-content input:checked ~ label {
+			font-weight: bold;
+		}
+
+		#dropdown-content li {
+			list-style: none;
+		}
+
+		td {
+			padding: 5px;
+		}
+
+		td:hover {
+			background:#48b;
+			border-color:#aef;
+		}
+
 	</style>
 </head>
 <body>
@@ -252,6 +299,25 @@
   	</nav>
 
   	<span class="cesium-button" id="menubutton" onclick="openmenu()">&#9776;</span>
+  	<div id="dropdown"><button class="cesium-button"><img id="pickedLang" src="../sourcedata/ru.png"></button>
+	<div id="dropdown-content" style="height: 0px">
+		<table>
+			<tbody>
+				<tr>
+				<td>
+				<img src="../sourcedata/ru.png">
+				<input type="radio" name="lang" id="ru" checked>
+				<label for="ru">Русский</label>
+			</td></tr>
+			<tr><td>
+				<img src="../sourcedata/uk.png">
+				<input type="radio" name="lang" id="en">
+				<label for="en" onclick="changetouk()">English</label>
+			</td></tr>
+			</tbody>
+		</table>
+	</div>
+</div>
 
 	<div id="modalWindow" class="modal">
 	  <div id="modalContent">
@@ -266,6 +332,8 @@
 	</div>
   	<div id="modalBackground"></div>
   </div>
+
+<div id="loadingOverlay"><h1>Loading...</h1></div>
 
   <script>
   	//Side navigation
@@ -313,7 +381,17 @@
     	modalBg.style.opacity = 0; 
 	  	mySideMenu.style.width = "0";
 	}
-	    
+	
+	var ddBtn = document.getElementById("dropdown");
+	var ddContent = document.getElementById("dropdown-content"); 
+	ddBtn.onclick = function() {
+		if (ddContent.style.height == "0px") {
+			ddContent.style.height = "100px";
+		} else {
+			ddContent.style.height = "0";
+		}
+	}
+    
 	// When the user clicks anywhere outside of the modal, close it
 	window.onclick = function(event) {
 	    if (event.target == modal || event.target == modalBg) disapp();
@@ -358,9 +436,9 @@
         }
     }
 	
-	//Adding lines
-	var lines = Cesium.GeoJsonDataSource.load('../sourcedata/segments.geojson');
-	lines.then(function(dataSource2)   {
+	//Adding segments
+	var segments = Cesium.GeoJsonDataSource.load('../sourcedata/segments.geojson');
+	segments.then(function(dataSource2)   {
     viewer.dataSources.add(dataSource2);
     var sourceentities = dataSource2.entities.values;
     for (var i = 0; i < sourceentities.length; i++) {
@@ -378,7 +456,18 @@
 			}) 
 		}
     }
-	})
+	});
+
+	var tartuspb = Cesium.GeoJsonDataSource.load('../sourcedata/tartu_spb.geojson'); 
+	tartuspb.then(function(dataSource3) { 
+	viewer.dataSources.add(dataSource3); 
+	var sourceentities = dataSource3.entities.values; 
+	var entity = sourceentities[0]; 
+	entity.name = entity.properties.desc_ru; 
+	entity.polyline.material = new Cesium.PolylineDashMaterialProperty({ 
+	color: Cesium.Color.FIREBRICK 
+	}) 
+	});
 	
 	//Addiing points
 	var points = Cesium.GeoJsonDataSource.load('../sourcedata/points.geojson');
@@ -428,11 +517,10 @@
 		
 		$.ajaxSetup({async: false});
 		$.get(pathtotxt, function(data) {entity.body = data;});    
-    	$.ajaxSetup({async: true}); 
-		entity.description = entity.img + entity.title + entity.latlong + entity.country + entity.unesco;
-		if (typeof(entity.body) != 'undefined') entity.description += entity.body;
-    }
-	}); 
+    	$.ajaxSetup({async: true});
+		if (typeof(entity.body) == 'undefined') entity.body = '';
+		entity.description = entity.img + entity.title + entity.latlong + entity.country + entity.unesco + entity.body;    }
+	});
   </script>
 </body>
 </html>
