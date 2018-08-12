@@ -509,7 +509,7 @@
 		entity.title = '<h1>' + entity.properties.Name_RU + '</h1>';	
 		entity.latlong = '<p>Широта: ' + entity.properties.Lat_DMS + ' с.ш.</p>' + '<p>Долгота: ' + entity.properties.Lon_DMS + ' в.д.</p>';
 		entity.country = '<p>Государство: ' + entity.properties.Country + '</p>';
-		if (+entity.properties.UNESCO > 0) entity.unesco = 'Объект наследия ЮНЕСКО<br>';
+		if (entity.properties.UNESCO > 0) entity.unesco = '<p>Объект наследия ЮНЕСКО</p>';
 		else entity.unesco = '';
 		//entity.source = '<p>Источник: <a style="color: WHITE" target="_blank" href="https://geoportal.rgo.ru/record/3825">В. Я. Струве. Дуга меридиана в 25°20\' между Дунаем и Ледовитым Морем.</a></p>';			
 		entity.source = '<p>Источник: <a style="color: WHITE" target="_blank" href="http://allworld-travel.com">All-World Travel</a></p>';			
