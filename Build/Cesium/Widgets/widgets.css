@@ -862,7 +862,7 @@ border-bottom-left-radius:7px;
 }
 
 button.cesium-infoBox-camera {
-display:block;
+display:none;
 position:absolute;
 top:4px;
 left:4px;
