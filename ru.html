@@ -1,265 +1,16 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
-	<link rel="icon" href="https://cdn0.iconfinder.com/data/icons/Junior/128/Junior_Icon_04_2.png">
+	<link rel="icon" href="sourcedata/WHC_logo.png">
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
 	<title>Геодезическая дуга Струве</title>
-	<script src="../Build/Cesium/Cesium.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-	<link rel="stylesheet" type="text/css" href="../Build/Cesium/Widgets/widgets.css">
-	<style type="text/css">
-		:root {
-			--cesium-white: #edffff;
-			--cesium-black: #0d0d0e;
-		}
-
-		* {
-			font-family: Helvetica;
-		}
-
-		html, body, #cesiumContainer {
-			width: 100%;
-			height: 100%;
-			margin: 0;
-			padding: 0;
-			overflow: hidden;
-		}
-		h1 { 
-			/*font-family: Helvetica;*/
-			font-size: 14px;
-			margin-top: 0em;
-			margin-bottom: 3.0em;
-			margin-left: 0;
-			margin-right: 0;
-			font-weight: bold;
-		}
-		p {
-			/*font-family: Helvetica;*/
-			margin-top: -1.0em;
-		}
-		#menubutton {
-			position: absolute;
-			top: 5px;
-			left: 1%;
-			z-index: 1;
-			font-size: 18px;
-			font-weight: bold;
-		}
-		.SideMenu {
-			display: block;
-			height: 100%;
-			width: 0px;
-			z-index: 2;
-			position: fixed;
-			/*font-family: Helvetica;*/
-			color: var(--cesium-white);
-			background-image: linear-gradient(rgba(0,0,0,0.8),rgba(0,0,0,0.8)), url(../sourcedata/bg-images/geodesists.jpg);
-			background-repeat: no-repeat;
-			background-size: auto 100%;
-			padding-top: 40px;
-			overflow: hidden;
-			transition: width 0.2s ease-in;
-			animation-name: bg-image-move, fade;
-			animation-duration: 10s, 10s;
-			animation-iteration-count: infinite, infinite;
-			animation-timing-function: linear, linear;
-		}
-
-		@keyframes bg-image-move {
-			from {background-position: 75% 100%;}
-			to {background-position: 10% 0%;}
-		}
-
-		@keyframes fade {
-			0% {opacity: 1;}
-			80% {opacity: 1;}
-			100% {opacity: 0;}
-		}
-
-		.SideMenu .SideSubMenu {
-			display: block;
-			flex-direction: column;
-		}
-		.SideMenu .SideSubMenu input {
-			display: none;
-		}
-		.SideMenu .SideSubMenu a {
-			display: block;
-			font-size: 0;
-			padding: 0.25em 0.25em 0.25em 24px;
-			min-width: 200px;
-			line-height: 1.4;
-			text-transform: none;
-			text-decoration: none;
-			color: var(--cesium-white);
-			opacity: 0;			
-			transition: font-size 300ms 150ms ease-in, opacity 300ms 0ms ease-in, padding-top 300ms 150ms ease-in, padding-bottom 300ms 150ms ease-in;
-			cursor: pointer;
-		}		
-		.SideMenu .SideSubMenu input:checked ~ a {
-			font-size: 14px;
-			padding-left: 24px;
-			opacity: 1;
-		}
-		.SideMenu .SideSubMenu input:checked ~ a:hover {
-			color: white;
-			transition: color 100ms;
-		}
-		.SideMenu .SideSubMenu label {
-			display: block;
-			min-width: 200px;
-			padding: 0.5em 1em;
-			/*font-family: Helvetica;*/
-			font-size: 20px;
-			font-weight: 600;
-			text-transform: uppercase;
-			cursor: pointer;
-			transition: font-size 100ms 0ms ease-in;			
-		}
-		.SideMenu .SideSubMenu label:hover {
-			font-size: 22px;
-		}
-		#CloseButton {
-			position: absolute;
-			top: 0;
-			right: 15px;
-			padding-top: 0;
-			padding-bottom: 0;
-			color: var(--cesium-white);
-			font-family: sans-serif;
-			font-size: 44px;
-			text-decoration: none;
-			text-align: right;
-			transition: color 100ms ease-in-out;
-		}
-		#CloseButton:hover { color: white; }
-		@media screen and (max-height: 450px) {
-			.SideMenu { padding-top: 15px; }
-			.SideMenu a { font-size: 18px; }
-		}
-		/* Модульное окно (фон) */
-		.modal {
-		    display: flex;
-		    justify-content: center;
-		    align-items: center;
-		    box-sizing: border-box;
-		    position: fixed;
-		    z-index: -1;
-		    left: 0;
-		    top: 0;
-		    opacity: 0;
-		    padding-top: 4%;
-		    padding-bottom: 4%;
-		    width: 100%;
-		    height: 100%;
-		    overflow: auto; /* Enable scroll if needed */
-		    background-color: transparent;
-		    transition: opacity 0.4s
-		}
-		/* Модульное окно */
-		#modalContent {
-		    position: relative;
-		    background-color: white;
-		    margin: auto;
-		    padding: 0;
-		    border-radius: 10px;
-		    width: 80%;
-		    height: 100%;
-		    top: -300px;
-    		box-shadow: 0 0 40px 10px rgba(0,0,0,0.75);
-		    transition: top 0.4s;
-		}
-
-		.closeModalWindow {
-			position: absolute;
-			top: -10px;
-			right: -40px;
-		    color: var(--cesium-white);
-		    opacity: 0.4;
-			font-family: sans-serif;
-			font-size: 44px;
-			text-decoration: none;
-		    transition: opacity 0.15s ease-in-out;
-		}
-		.closeModalWindow:hover, .closeModalWindow:focus {
-			opacity: 0.9;
-		    cursor: pointer;
-		}
-		.modalHeader {
-			height: 10%;
-		    padding: 2px 16px;
-			background-color: var(--cesium-black);
-		    color: white;
-		}
-		.modalBody {
-			height: 100%;
-		    border-radius: 10px;
-		    transform: translateZ(0px);
-			overflow: hidden;
-		}
-		.modalBody > iframe {
-			width: 100%;
-			height: 100%;
-			border: 0;
-		} 
-		
-		#modalBackground {
-		    display: block;
-		    position: fixed;
-		    top: 0px;
-		    left: 0px;
-		    background-color: rgba(0,0,0,0.5);
-		    width: 100%;
-		    height: 100%;
-		    opacity: 0;
-		    z-index: -1;
-		    transition: opacity 400ms ease;
-		}
-
-		#dropdown {
-			position: absolute;
-			top: 5px;
-			left: 70px;
-			color: var(--cesium-white);
-			cursor: pointer;
-			z-index: 1;
-		}
-
-		#dropdown img {
-			width: auto;
-			height: 20px;
-		}
-
-		#dropdown-content {
-			overflow: hidden;
-			height: 0px;
-			transition: height 0.2s;
-		}
-
-		#dropdown-content input {
-			display: none;
-		}
-
-		#dropdown-content input:checked ~ label {
-			font-weight: bold;
-		}
-
-		#dropdown-content li {
-			list-style: none;
-		}
-
-		td {
-			padding: 5px;
-		}
-
-		td:hover {
-			background:#48b;
-			border-color:#aef;
-		}
-
-	</style>
+	<script src="https://cesiumjs.org/releases/1.55/Build/Cesium/Cesium.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="https://cesiumjs.org/releases/1.55/Build/Cesium/Widgets/widgets.css">
+	<link rel="stylesheet" type="text/css" href="css/styles.css">
+	<link rel="stylesheet" type="text/css" href="css/widgets_custom.css">
 </head>
 <body>
   <div id="cesiumContainer">
@@ -269,258 +20,334 @@
   		<div class="SideSubMenu">
   			<input type="radio" name="sidemenu" id="aboutProject">
   			<label for="aboutProject">О проекте</label>
-   			<a href="ModalWindows/Mission.html" target="modalIFrame" onclick="openModalWindow()">Миссия</a>
-  			<a href="ModalWindows/Team.html" target="modalIFrame" onclick="openModalWindow()">Команда</a>
-  			<a href="ModalWindows/Development.html" target="modalIFrame" onclick="openModalWindow()">Ход работ</a>
+   			<a href="modalwindows/Mission.html" target="modalIFrame" onclick="openModalWindow()">Миссия</a>
+  			<a href="modalwindows/Team.html" target="modalIFrame" onclick="openModalWindow()">Команда разработчиков</a>
+  			<a href="modalwindows/Development.html" target="modalIFrame" onclick="openModalWindow()">Ход работ</a>
   		</div>
 
   		<div class="SideSubMenu">
   			<input type="radio" name="sidemenu" id="struve-arc">
-  			<label for="struve-arc">Дуга Струве</label>
-   			<a href="ModalWindows/AboutEarthMeasurements.html" target="modalIFrame" onclick="openModalWindow()">О градусных измерениях</a>
-   			<a href="ModalWindows/History.html" target="modalIFrame" onclick="openModalWindow()">История</a>
-  			<a href="ModalWindows/Leaders.html" target="modalIFrame" onclick="openModalWindow()">Руководители</a>
-  			<a href="ModalWindows/Results.html" target="modalIFrame" onclick="openModalWindow()">Результаты</a>
+  			<label for="struve-arc">Дуга<br>Меридиана</label>
+				<a href="https://ru.wikipedia.org/wiki/%D0%94%D1%83%D0%B3%D0%B0_%D0%A1%D1%82%D1%80%D1%83%D0%B2%D0%B5" target="modalIFrame" onclick="openModalWindow()">О градусных измерениях</a>
+				<a href="modalwindows/Leaders.html" target="modalIFrame" onclick="openModalWindow()">Руководители</a>   
+   			<a href="modalwindows/Organisations.html" target="modalIFrame" onclick="openModalWindow()">Научные Учреждения</a>
+   			<a href="modalwindows/ArcDesigning.html" target="modalIFrame" onclick="openModalWindow()">Проектирование Дуги</a>
+   			<a href="modalwindows/FieldWorks.html" target="modalIFrame" onclick="openModalWindow()">Полевые Работы</a>
+   			<a href="modalwindows/MeasurementsProcessing.html" target="modalIFrame" onclick="openModalWindow()">Обработка измерений</a>
+   			<a href="modalwindows/Drawings.html" target="modalIFrame" onclick="openModalWindow()">Чертежи</a>
+  			<a href="modalwindows/Results.html" target="modalIFrame" onclick="openModalWindow()">Результаты</a>
   		</div>  
 
   		<div class="SideSubMenu">
   			<input type="radio" name="sidemenu" id="events">
-  			<label for="events">События</label>
-	        <a href="ModalWindows/Conferences.html" target="modalIFrame" onclick="openModalWindow()">Конференции</a>
-	        <a href="ModalWindows/Expeditions.html" target="modalIFrame" onclick="openModalWindow()">Экспедиции</a>
+  			<label for="events">Памятник ЮНЕСКО</label>
+			<a href="modalwindows/History.html" target="modalIFrame" onclick="openModalWindow()">История возникновения</a>
+			<a href="modalwindows/Conferences.html" target="modalIFrame" onclick="openModalWindow()">Комитет</a>
+			<a href="modalwindows/Expeditions.html" target="modalIFrame" onclick="openModalWindow()">Экспедиции</a>
+			<a href="modalwindows/Expeditions.html" target="modalIFrame" onclick="openModalWindow()">Сувенирная продукция</a>
   		</div>  	
 
   		<div class="SideSubMenu">
   			<input type="radio" name="sidemenu" id="sources">
   			<label for="sources">Источники</label>
-	        <a href="ModalWindows/ArcDuMeridien.html" target="modalIFrame" onclick="openModalWindow()">В.Я.Струве<br>"Дуга меридиана"</a>
-	        <a href="ModalWindows/References.html" target="modalIFrame" onclick="openModalWindow()">Литература</a>
+	      <a href="modalwindows/ArcDuMeridien.html" target="modalIFrame" onclick="openModalWindow()">В.Я.Струве<br>"Дуга меридиана"</a>
+	      <a href="modalwindows/References.html" target="modalIFrame" onclick="openModalWindow()">Литература</a>
   		</div>  	
   	</nav>
 
-  	<span class="cesium-button" id="menubutton" onclick="openmenu()">&#9776;</span>
-  	<div id="dropdown"><button class="cesium-button"><img id="pickedLang" src="../sourcedata/ru.png"></button>
-	<div id="dropdown-content" style="height: 0px">
-		<table>
-			<tbody>
-				<tr>
-				<td>
-				<img src="../sourcedata/ru.png">
-				<input type="radio" name="lang" id="ru" checked>
-				<label for="ru">Русский</label>
-			</td></tr>
-			<tr><td>
-				<img src="../sourcedata/uk.png">
-				<input type="radio" name="lang" id="en">
-				<label for="en" onclick="changetouk()">English</label>
-			</td></tr>
-			</tbody>
-		</table>
-	</div>
-</div>
+    <button class="cesium-button" id="menubutton" onclick="openmenu()" title="Открыть меню">&#9776;</button>
+  	<!--<a href="en.html" id="changeLanguage" title="English version"><button class="cesium-button"><img id="pickedLang" src="../../sourcedata/uk.png"></button>
+			<div id="dropdown-content" style="height: 0px">
+				<table>
+					<tbody>
+						<tr>
+							<td>
+								<img src="../../sourcedata/ru.png">
+								<input type="radio" name="lang" id="ru" checked>
+								<label for="ru">Русский</label>
+							</td></tr>
+						<tr>
+							<td>
+								<img src="../../sourcedata/uk.png">
+								<input type="radio" name="lang" id="en">
+								<label for="en" onclick="changetouk()">English</label>
+							</td></tr>
+					</tbody>
+				</table>
+			</div>
+		</a>-->
 
-	<div id="modalWindow" class="modal">
-	  <div id="modalContent">
-	    <!--<div class="modalHeader">
-	      <h2>Modal Header</h2>
-	    </div>-->
-	    <span class="closeModalWindow" onclick="disapp()">&times;</span>
-	    <div class="modalBody">
-	      <iframe frameborder="0" allowfullscreen src="" name="modalIFrame"></iframe>
-	    </div>
-	  </div>
-	</div>
-  	<div id="modalBackground"></div>
+		<div id="changeLanguage" title="Изменить язык">
+			<div class="cesium-button" id="langButton" style="width: 30px;">
+				<img src="sourcedata/ru.png">
+      </div>
+    </div>
+		<div id="langsMenu" class="cesium-button" style="display: none">
+			<table><tbody><tr><td  id="pickedLang">
+				<img src="sourcedata/ru.png">
+         <a href="javascript:void(0)" title="Русская версия">Русский</a>
+       </td></tr>
+			<tr><td>
+				<img src="sourcedata/uk.png">
+         <a href="en.html" title="English version">English</a>
+      </td></tr>
+      <tr><td>
+				<img src="sourcedata/swe.png">
+        <a href="swe.html" title="Svenska versionen">Svenska</a>
+      </td></tr>
+      </tbody></table>
+		</div>
+
+		<div id="modalWindow" class="modal">
+			<div id="modalContent">
+				<!--<div class="modalHeader">
+					<h2>Modal Header</h2>
+				</div>-->
+				<span class="closeModalWindow" onclick="disapp()">&times;</span>
+				<div class="modalBody">
+					<iframe frameborder="0" allowfullscreen src="" name="modalIFrame"></iframe>
+				</div>
+			</div>
+		</div>
+  	<div id="modalBackground">
+    </div>
   </div>
 
-<div id="loadingOverlay"><h1>Loading...</h1></div>
+<script src="scripts/thematic.js"></script>
+<script>
+//for symbol: is point UNESCO or not
+function isUnesco(entity) {
+  var point = {};
+  if (entity.properties.UNESCO > 0) {
+    point = {
+      billboard: {
+          image: 'sourcedata/symbol_unesco.png',
+          eyeOffset: new Cesium.Cartesian3(0,0,-200),
+          scaleByDistance: new Cesium.NearFarScalar(0, 0.075, 200000, 0.021),
+          distanceDisplayCondition: new Cesium.DistanceDisplayCondition(0, 1500000)
+      },
+      label: {
+        font: 'bold 16pt Helvetica, sans-serif',
+        eyeOffset: new Cesium.Cartesian3(0, 0, -600),
+        pixelOffset: new Cesium.Cartesian2(15, 0),
+        pixelOffsetScaleByDistance: new Cesium.NearFarScalar(0, 3.5, 250000, 1),
+        distanceDisplayCondition: new Cesium.DistanceDisplayCondition(0, 1500000)
+        //pixelOffset: new Cesium.NearFarScalar()
+      }
+    }
+  }
+  else {
+    point = {
+      billboard: {
+        image: 'sourcedata/symbol.png',
+        eyeOffset: new Cesium.Cartesian3(0,0,-100),
+        scaleByDistance: new Cesium.NearFarScalar(0, 0.05, 100000, 0.014),
+        distanceDisplayCondition: new Cesium.DistanceDisplayCondition(0,750000)
+      },
+      label: {
+        font: 'bold 13pt Helvetica, sans-serif',
+        eyeOffset: new Cesium.Cartesian3(0, 0, -300),
+        pixelOffset: new Cesium.Cartesian2(10, 0),
+        pixelOffsetScaleByDistance: new Cesium.NearFarScalar(0, 3.5, 250000, 1),
+        distanceDisplayCondition: new Cesium.DistanceDisplayCondition(0, 300000)
+      }
+    }
+  }
+  return point;
+}
 
-  <script>
-  	//Side navigation
-	// Get the modal
-	var modal = document.getElementById('modalWindow');
-	var modalBg = document.getElementById("modalBackground");
-	var modalContent = document.getElementById('modalContent');
-	var mySideMenu = document.getElementById('mySideMenu');
-  	function openmenu() {
-  		mySideMenu.style.width = "200px";
-    	modalBg.style.opacity = 1;
-    	modalBg.style.zIndex = "1";
-  	}
-  	function closemenu() {
-  		mySideMenu.style.width = "0";
-    	modalBg.style.opacity = 0;  
-    	setTimeout(function() {
-    		modalBg.style.zIndex = "-1";
-    	}, 400);	
- 	}
- 	/*function opensidemenu(menuName) {
- 			var x = document.getElementById(menuName).style;
- 			if (x.height == "100%") {
- 				x.height="0";
- 			} else {
- 					x.height="100%";
- 			}
- 	}*/
-	// When the user clicks the button, open the modal 
-	function openModalWindow() {
-	    modal.scrollTop = 0;
-	    modal.style.zIndex = "2";
-	    modal.style.opacity = "1";
-	  	mySideMenu.style.width = "0";
-	  	modalContent.style.top = "0"
-	}
-	//Close the modal
-	function disapp() {
-	    modal.style.opacity = "0";
-		setTimeout(function() {
-			modal.style.zIndex = "-1";
-			modalContent.style.top = "-300px";
-    		modalBg.style.zIndex = "-1";
-	    }, 400);
-    	modalBg.style.opacity = 0; 
-	  	mySideMenu.style.width = "0";
-	}
-	
-	var ddBtn = document.getElementById("dropdown");
-	var ddContent = document.getElementById("dropdown-content"); 
-	ddBtn.onclick = function() {
-		if (ddContent.style.height == "0px") {
-			ddContent.style.height = "100px";
-		} else {
-			ddContent.style.height = "0";
-		}
-	}
+function fillInfoBoxDescription(entity) {
+  var contents = {
+    pathtotxt: 'sourcedata/text/points/' + entity.properties.Name_by_Struve + '/' + entity.properties.Name_by_Struve +'.txt',
+    pathToIMG: '<img width="100%" height=auto src="sourcedata/photos/points/' + entity.properties.Name_by_Struve + '/' + entity.properties.Name_by_Struve + '.jpg" alt="Нет изображения"/>',
+    name: 'Пункт цепи триангуляции Геодезической Дуги Струве',
+    title: '<h1 class="ibc-title">' + entity.properties.Name_RU + '</h1>',
+    //baseInfo: '<p class="ibc-blocktext">Географические координаты пункта: ' + entity.properties.Lat_DMS + 'с.ш., ' +  entity.properties.Lon_DMS + ' в.д. Пункт находится в государстве ' + entity.properties.Country_RU + '. ' + ((entity.properties.UNESCO > 0) ? 'Пункт включён в список Всемирного наследия ЮНЕСКО. ' : ''),
+    readTxtDesc: function() {
+      var contents;
+      $.ajaxSetup({async: false});
+      $.get(this.pathtotxt, function(data) {
+        contents = data;
+      }); 
+      $.ajaxSetup({async: true});
+      if (typeof(contents) == 'undefined') contents = '';
+      return contents;
+    },
+    splitTxtDesc: function() {
+      var splitContent = this.readTxtDesc().split('\n');
+      var contentParts = {
+        generalInfo: '<ul><li>Основная информация:</li><p class="ibc-blocktext">' + splitContent[0] + '</p>',
+        historicInfo: '<li>Исторические сведения:</li><p class="ibc-blocktext">' + ((typeof(splitContent[1]) != 'undefined') ? splitContent[1] : '') + '</p>',
+        currentCondition: '<li>Современное состояние:</li><p class="ibc-blocktext">' + splitContent.slice(2).join(' ') + '</p></ul>'
+      }
+      return contentParts;
+    }
+  }
+  return contents;
+}
+
+//Tokens
+Cesium.Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJmZDRjMTJmMy00NmUyLTRjMDEtYjYwYS04MDMzZjg1NjgzMzgiLCJpZCI6MzIyMiwiaWF0IjoxNTM2NDU0NzM2fQ.IZnm7dlDtuAPvrXc0Ch4YcINX8A5ZhvBfSQrDXN7usA';
+Cesium.MapboxApi.defaultAccessToken = 'pk.eyJ1IjoibWFydGluaHJ0IiwiYSI6ImNqZzFpcGI0aTM0aDMyd3FqM2pkdjRzd3QifQ.PY0eLPoa0cFkXKuSvMi6Ww';
+
+//Viewer
+var viewer = new Cesium.Viewer('cesiumContainer', {/*imageryProvider : new Cesium.ArcGisMapServerImageryProvider({
+    url: '//services.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer',
+    enablePickFeatures: false}),*/
+    imageryProvider: new Cesium.IonImageryProvider({ assetId: 3845 }),
+    baseLayerPicker: true, timeline: false, animation: false, selectionIndicator : true, sceneModePicker: false });
+
+//var layers = viewer.scene.imageryLayers;
+var imageryLayer = viewer.imageryLayers.addImageryProvider(
+  new Cesium.IonImageryProvider({assetId: 15993}));
+imageryLayer.show = false;
+</script>
+<script src="scripts/historicLayers.js"></script>
+<script>
+//var cameraPosition = viewer.scene.camera.positionWC;
+//var ellipsoidPosition = viewer.scene.globe.ellipsoid.scaleToGeodeticSurface(cameraPosition);
+//var distance = Cesium.Cartesian3.magnitude(Cesium.Cartesian3.subtract(cameraPosition, ellipsoidPosition, new Cesium.Cartesian3()));
+
+//Remove Bing maps and add Natural Earth base layer
+//viewer.imageryLayers.remove(viewer.imageryLayers.get(0));
+//viewer.imageryLayers.addImageryProvider(new Cesium.IonImageryProvider({ assetId: 3813 }));
+
+// Create an initial camera view
+var initialPosition = new Cesium.Cartesian3.fromDegrees(26.7200, 57.99333, 13000000);
+var homeCameraView = {destination: initialPosition};
+
+// Set the initial view
+viewer.scene.camera.setView(homeCameraView);
+
+// Camera flight animation options
+homeCameraView.duration = 3.0;
+homeCameraView.endTransform = Cesium.Matrix4.IDENTITY;
+// Override the default home button
+viewer.homeButton.viewModel.command.beforeExecute.addEventListener(function (def) {
+    def.cancel = true;
+    viewer.scene.camera.flyTo(homeCameraView);
+});
+
+//Removing Infobox iframe restrictions
+var frame = viewer.infoBox.frame;
+frame.setAttribute('sandbox', 'allow-same-origin allow-scripts allow-popups allow-forms');
+frame.addEventListener('load', function () {
+  var cssLink = frame.contentDocument.createElement('link');
+  cssLink.href = 'css/InfoBox_custom.css';
+  cssLink.rel = 'stylesheet';
+  cssLink.type = 'text/css';
+  frame.contentDocument.head.appendChild(cssLink);
+}, false);
+
+//Adding segments
+var segments = Cesium.GeoJsonDataSource.load('sourcedata/segments.geojson');
+segments.then(function(dataSource2) {
+  viewer.dataSources.add(dataSource2);
+  var sourceentities = dataSource2.entities.values;
+  for (var i = 0; i < sourceentities.length; i++) {
+    var entity = sourceentities[i];
+    var pathtotxt = 'sourcedata/text/segments/' + entity.properties.Name_EN + '/' + entity.properties.Name_EN +'.txt';	
+    entity.name = 'Сегмент Геодезической Дуги Струве';
+    entity.polyline.width = 1.5;
+    entity.polyline.material = new Cesium.PolylineOutlineMaterialProperty({
+            color: Cesium.Color.FIREBRICK,
+            outlineWidth : 0,
+            outlineColor : Cesium.Color.BLACK
+          });
+			if (entity.properties.tartu_spb > 0) {
+      entity.polyline.material = new Cesium.PolylineDashMaterialProperty({ color: Cesium.Color.FIREBRICK })
+				}
+			/*entity.tabs = `<ul style="list-style:none; margin: 0 auto 5px auto; padding-left: 0;">
+                      <li style="display: inline-block; width: 24%;"><a style="display: block; padding: 10px 10px 0 10px; text-decoration: none; text-align: center; font-size: 12px; line-height: 1.4; border-right: 1px solid rgb(84,84,84);" href="#">Основная<br>информация</a></li>
+                      <li style="display: inline-block; width: 24%;"><a style="display: block; padding: 10px 10px 0 10px; text-decoration: none; text-align: center; font-size: 12px; line-height: 1.4; border-right: 1px solid rgb(84,84,84);" href="#">Физ.-геогр.<br>характеристика</a></li>
+                      <li style="display: inline-block; width: 24%;"><a style="display: block; padding: 10px 10px 0 10px; text-decoration: none; text-align: center; font-size: 12px; line-height: 1.4; border-right: 1px solid rgb(84,84,84);" href="#">Используемые<br>инструменты</a></li>
+                      <li style="display: inline-block; width: 24%;"><a style="display: block; padding: 10px 10px 0 10px; text-decoration: none; text-align: center; font-size: 12px; line-height: 1.4;" href="#">Геодезические<br>знаки</a></li>
+                  </ul>`;	*/
+    entity.img = '<img width="300px;" height=auto style="margin: 0 77px;" src="sourcedata/photos/segments/' + entity.properties.Name_EN + '/' + entity.properties.Name_EN + '.jpg" alt="Нет изображения"/>';						
+    entity.title = '<h1>' + entity.properties.Name_RU + '</h1>';
+
+    $.ajaxSetup({async: false});
+    $.get(pathtotxt, function(data) {
+      entity.body = data;
+    });    
+    $.ajaxSetup({async: true});
+
+    //if (typeof(entity.body) == 'undefined') entity.body = '';
+    entity.description = /*entity.tabs*/ + entity.img + entity.title + entity.body;
+  }
+});
+
+var tartuspb = Cesium.GeoJsonDataSource.load('sourcedata/tartu_spb.geojson'); 
+tartuspb.then(function(dataSource3) {
+  viewer.dataSources.add(dataSource3); 
+  var sourceentities = dataSource3.entities.values; 
+  var entity = sourceentities[0]; 
+  entity.name = entity.properties.desc_ru; 
+  entity.polyline.material = new Cesium.PolylineDashMaterialProperty({color: Cesium.Color.FIREBRICK})
+});
+
+//Addiing points
+var points = Cesium.GeoJsonDataSource.load('sourcedata/points.geojson');
+//var source;
+points.then(function(dataSource)  {
+  viewer.dataSources.add(dataSource);
+  var sourceentities = dataSource.entities.values;
+  for (var i = 0; i < sourceentities.length; i++) {
+    var entity = sourceentities[i]; 
     
-	// When the user clicks anywhere outside of the modal, close it
-	window.onclick = function(event) {
-	    if (event.target == modal || event.target == modalBg) disapp();
-	}
- 	 //Cesium 
- 	var viewer = new Cesium.Viewer('cesiumContainer', {imageryProvider : new Cesium.ArcGisMapServerImageryProvider({
-		url: '//services.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer',
-		enablePickFeatures: false}),
-		baseLayerPicker: true, timeline: false, animation: false, selectionIndicator : true, sceneModePicker: false });
-		
-	//var cameraPosition = viewer.scene.camera.positionWC;
-	//var ellipsoidPosition = viewer.scene.globe.ellipsoid.scaleToGeodeticSurface(cameraPosition);
-	//var distance = Cesium.Cartesian3.magnitude(Cesium.Cartesian3.subtract(cameraPosition, ellipsoidPosition, new Cesium.Cartesian3()));
-  
- 	 //Remove Bing maps and add Natural Earth base layer
-  	//viewer.imageryLayers.remove(viewer.imageryLayers.get(0));
-  	//viewer.imageryLayers.addImageryProvider(new Cesium.IonImageryProvider({ assetId: 3813 }));
-  
- 	 // Create an initial camera view
-	var initialPosition = new Cesium.Cartesian3.fromDegrees(26.7200, 57.99333, 13000000);
-	var homeCameraView = {destination: initialPosition};
-	
- 	 // Set the initial view
-	viewer.scene.camera.setView(homeCameraView);
- 
- 	 // Camera flight animation options
-	homeCameraView.duration = 3.0;
-	homeCameraView.endTransform = Cesium.Matrix4.IDENTITY;
- 	 // Override the default home button
-	viewer.homeButton.viewModel.command.beforeExecute.addEventListener(function (def) {
-		def.cancel = true;
-		viewer.scene.camera.flyTo(homeCameraView);
-    });
- 
-  	//for image: UNESCO or not?
-    function unesco_or_not(entity) {
-        if (entity.properties.UNESCO > 0) {
-            return '../sourcedata/symbol_unesco.png'
-        }
-        else {
-            return '../sourcedata/symbol.png'
-        }
+    //Знак
+    entity.billboard = {
+      image: isUnesco(entity).billboard.image,
+      //heightReference : Cesium.HeightReference.CLAMP_TO_GROUND,
+      eyeOffset: isUnesco(entity).billboard.eyeOffset,
+      scaleByDistance: isUnesco(entity).billboard.scaleByDistance,
+      distanceDisplayCondition: isUnesco(entity).billboard.distanceDisplayCondition
     }
-	
-	//Adding segments
-	var segments = Cesium.GeoJsonDataSource.load('../sourcedata/segments.geojson');
-	segments.then(function(dataSource2)   {
-    viewer.dataSources.add(dataSource2);
-    var sourceentities = dataSource2.entities.values;
-    for (var i = 0; i < sourceentities.length; i++) {
-		var entity = sourceentities[i];
-		entity.title = entity.properties.NAME_RU;
-        entity.polyline.width = 1.5;
-        entity.polyline.material = new Cesium.PolylineOutlineMaterialProperty({
-                color: Cesium.Color.FIREBRICK,
-                outlineWidth : 0,
-                outlineColor : Cesium.Color.BLACK
-            })
-    if (entity.properties.tartu_spb > 0) { 
-		entity.polyline.material = new Cesium.PolylineDashMaterialProperty({ 
-		color: Cesium.Color.FIREBRICK 
-			}) 
-		}
+    
+    //Подпись
+    entity.label = {
+      text: entity.properties.Name_RU,
+      font: isUnesco(entity).label.font,
+      fillColor: Cesium.Color.White,
+      outlineColor: Cesium.Color.BLACK,
+      outlineWidth: 2,
+      style: Cesium.LabelStyle.FILL_AND_OUTLINE,
+      eyeOffset: isUnesco(entity).label.eyeOffset,
+      showBackground: false,
+      pixelOffset: isUnesco(entity).label.pixelOffset,
+      pixelOffsetScaleByDistance: isUnesco(entity).label.pixelOffsetScaleByDistance,
+      horizontalOrigin: Cesium.HorizontalOrigin.LEFT,
+      verticalOrigin: Cesium.VerticalOrigin.CENTER,
+      distanceDisplayCondition: isUnesco(entity).label.distanceDisplayCondition
     }
-	});
 
-	var tartuspb = Cesium.GeoJsonDataSource.load('../sourcedata/tartu_spb.geojson'); 
-	tartuspb.then(function(dataSource3) { 
-	viewer.dataSources.add(dataSource3); 
-	var sourceentities = dataSource3.entities.values; 
-	var entity = sourceentities[0]; 
-	entity.name = entity.properties.desc_ru; 
-	entity.polyline.material = new Cesium.PolylineDashMaterialProperty({ 
-	color: Cesium.Color.FIREBRICK 
-	}) 
-	});
-	
-	//Addiing points
-	var points = Cesium.GeoJsonDataSource.load('../sourcedata/points.geojson');
-	//var source;
-	points.then(function(dataSource)  {
-    viewer.dataSources.add(dataSource);
-    //source = dataSource.entities;
-    var sourceentities = dataSource.entities.values;
-    for (var i = 0; i < sourceentities.length; i++) {
-        var entity = sourceentities[i];
-		var pathtotxt = '../sourcedata/text/points/' + entity.properties.Name_by_St + '/' + entity.properties.Name_by_St +'.txt';	
-        entity.name = 'Пункт триангуляции Геодезической Дуги Струве';
-        entity.billboard = {
-            image: unesco_or_not(entity),
-            //heightReference : Cesium.HeightReference.CLAMP_TO_GROUND,
-			eyeOffset: new Cesium.Cartesian3(0, 0, -500),
-            //scale: 0.02,
-		}
-		if (+entity.properties.UNESCO > 0)	entity.billboard.scaleByDistance = new Cesium.NearFarScalar(0, 0.075, 100000, 0.021);
-		else	entity.billboard.scaleByDistance = new Cesium.NearFarScalar(0, 0.05, 100000, 0.014);
-		
-        entity.label = {
-            text: entity.properties.Name_RU,
-            font: 'bold 16pt Helvetica',
-            fillColor: Cesium.Color.White,
-            outlineColor: Cesium.Color.BLACK,
-            outlineWidth: 2,
-			style: Cesium.LabelStyle.FILL_AND_OUTLINE,
-			eyeOffset: new Cesium.Cartesian3(0, 0, -550),
-            showBackground: false,
-            pixelOffset: new Cesium.Cartesian2(-8, 8),
-            horizontalOrigin: Cesium.HorizontalOrigin.RIGHT,
-            verticalOrigin: Cesium.VerticalOrigin.TOP,
-			}
-					
-        entity.billboard.distanceDisplayCondition = new Cesium.DistanceDisplayCondition(0, 900000.0);
-        entity.label.distanceDisplayCondition = new Cesium.DistanceDisplayCondition(0, 250000.0);
-		entity.img = '<img width="100%" height=auto style="float:left; margin: 1.5em 1em 0 0;" src="../sourcedata/photos/points/' + entity.properties.Name_by_St + '/' + entity.properties.Name_by_St + '.jpg" alt="Нет изображения"/>';
-		entity.title = '<h1>' + entity.properties.Name_RU + '</h1>';	
-		entity.latlong = '<p>Широта: ' + entity.properties.Lat_DMS + ' с.ш.</p>' + '<p>Долгота: ' + entity.properties.Lon_DMS + ' в.д.</p>';
-		entity.country = '<p>Государство: ' + entity.properties.Country + '</p>';
-		if (entity.properties.UNESCO > 0) entity.unesco = '<p>Объект наследия ЮНЕСКО</p>';
-		else entity.unesco = '';
-		//entity.source = '<p>Источник: <a style="color: WHITE" target="_blank" href="https://geoportal.rgo.ru/record/3825">В. Я. Струве. Дуга меридиана в 25°20\' между Дунаем и Ледовитым Морем.</a></p>';			
-		entity.source = '<p>Источник: <a style="color: WHITE" target="_blank" href="http://allworld-travel.com">All-World Travel</a></p>';			
-		//entity.body = '<object width="910" height="340" type="text/plain" data="../sourcedata/text/points/' + entity.properties.Name_by_St + '/' + entity.properties.Name_by_St + '.txt" border="0" style="overflow: scroll; color: WHITE; font-family: verdana;"></object>';
-		
-		$.ajaxSetup({async: false});
-		$.get(pathtotxt, function(data) {entity.body = data;});    
-    	$.ajaxSetup({async: true});
-		if (typeof(entity.body) == 'undefined') entity.body = '';
-		entity.description = entity.img + entity.title + entity.latlong + entity.country + entity.unesco + entity.body;    }
-	});
-  </script>
+    /*entity.tabs = `<ul style="list-style:none; margin: 0 auto 5px auto; padding-left: 0;">
+                    <li style="display: inline-block; width: 32%;"><a style="display: block; padding: 10px 10px 0 10px; text-decoration: none; text-align: center; font-size: 14px; line-height: 1.4;" href="#">Основная<br>информация</a></li>
+                    <li style="display: inline-block; width: 32%;"><a style="display: block; padding: 10px 10px 0 10px; text-decoration: none; text-align: center; font-size: 14px; line-height: 1.4; border-left: 1px solid rgb(84,84,84); border-right: 1px solid rgb(84,84,84);" href="#">Заметки<br>Струве</a></li>
+                    <li style="display: inline-block; width: 32%;"><a style="display: block; padding: 10px 10px 0 10px; text-decoration: none; text-align: center; font-size: 14px; line-height: 1.4;" href="#">Современное<br>состояние</a></li>
+                    </ul>`;*/
+
+    //Заголовок
+    entity.name = fillInfoBoxDescription(entity).name;
+
+    //Описание
+    entity.img = fillInfoBoxDescription(entity).pathToIMG;
+    entity.title = fillInfoBoxDescription(entity).title;	
+    //entity.baseInfo = fillInfoBoxDescription(entity).baseInfo;
+    //entity.source = '<p>Источник: <a style="color: white" target="_blank" href="http://allworld-travel.com">All-World Travel</a></p>';			
+    /*   
+    $.ajaxSetup({async: false});
+    $.get(fillInfoBoxDescription(entity).pathtotxt, function(data) {
+      entity.body = data;
+    });    
+    $.ajaxSetup({async: true});
+
+    if (typeof(entity.body) == 'undefined') entity.body = '';*/
+    //entity.body.parts = entity.body.split('\n');
+    entity.body = fillInfoBoxDescription(entity).splitTxtDesc().generalInfo + fillInfoBoxDescription(entity).splitTxtDesc().historicInfo + fillInfoBoxDescription(entity).splitTxtDesc().currentCondition;
+    entity.description = /*entity.tabs +*/ entity.img + entity.title + /*entity.baseInfo*/ entity.body;
+  }
+});
+</script>
 </body>
 </html>
