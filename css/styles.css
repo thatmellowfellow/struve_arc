@@ -1,0 +1,244 @@
+:root {
+    --cesium-white: #edffff;
+    --cesium-black: #0d0d0e;
+}
+* {
+    font-family: Helvetica;
+}
+html, body, #cesiumContainer {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+#menubutton {
+    position: absolute;
+    top: 5px;
+    left: 1%;
+    z-index: 1;
+    font-size: 18px;
+    font-weight: bold;
+}
+.SideMenu {
+    display: block;
+    height: 100%;
+    width: 0px;
+    z-index: 2;
+    position: fixed;
+    /*font-family: Helvetica;*/
+    color: var(--cesium-white);
+    /*background-image: linear-gradient(rgba(0,0,0,0.8),rgba(0,0,0,0.8)), url(../../sourcedata/bg-images/geodesists.jpg);*/
+    background-color: var(--cesium-black);
+    background-repeat: no-repeat;
+    background-size: auto 100%;
+    padding-top: 40px;
+    overflow: hidden;
+    transition: width 0.2s ease-in;
+    /*animation-name: bg-image-move, fade;*/
+    animation-duration: 10s, 10s;
+    animation-iteration-count: infinite, infinite;
+    animation-timing-function: linear, linear;
+}
+@keyframes bg-image-move {
+    from {background-position: 75% 100%;}
+    to {background-position: 10% 0%;}
+}
+@keyframes fade {
+    0% {opacity: 1;}
+    80% {opacity: 1;}
+    100% {opacity: 0;}
+}
+.SideMenu .SideSubMenu {
+    display: block;
+    flex-direction: column;
+}
+.SideMenu .SideSubMenu input {
+    display: none;
+}
+.SideMenu .SideSubMenu a {
+    display: block;
+    font-size: 0;
+    font-weight: 400;
+    padding: 0.25em 0.25em 0.25em 24px;
+    min-width: 200px;
+    line-height: 1.4;
+    text-transform: none;
+    text-decoration: none;
+    color: var(--cesium-white);
+    opacity: 0;			
+    transition: font-size 300ms 150ms ease-in, opacity 300ms 0ms ease-in, padding-top 300ms 150ms ease-in, padding-bottom 300ms 150ms ease-in;
+    cursor: pointer;
+}		
+.SideMenu .SideSubMenu input:checked ~ a {
+    font-size: 14px;
+    padding-left: 24px;
+    opacity: 1;
+}
+.SideMenu .SideSubMenu input:checked ~ a:hover {
+    color: white;
+    transition: color 100ms;
+}
+.SideMenu .SideSubMenu label {
+    display: block;
+    min-width: 200px;
+    padding: 0.5em 1em;
+    /*font-family: Helvetica;*/
+    font-size: 20px;
+    font-weight: 600;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: font-size 100ms 0ms ease-in;			
+}
+.SideMenu .SideSubMenu label:hover {
+    color: white;
+}
+#CloseButton {
+    position: absolute;
+    top: 0;
+    right: 15px;
+    padding-top: 0;
+    padding-bottom: 0;
+    color: var(--cesium-white);
+    font-family: sans-serif;
+    font-size: 44px;
+    text-decoration: none;
+    text-align: right;
+    transition: color 100ms ease-in-out;
+}
+#CloseButton:hover { color: white; }
+@media screen and (max-height: 450px) {
+    .SideMenu { padding-top: 15px; }
+    .SideMenu a { font-size: 18px; }
+}
+/* Модульное окно (фон) */
+.modal {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-sizing: border-box;
+    position: fixed;
+    z-index: -1;
+    left: 0;
+    top: 0;
+    opacity: 0;
+    padding-top: 4%;
+    padding-bottom: 4%;
+    width: 100%;
+    height: 100%;
+    overflow: auto; /* Enable scroll if needed */
+    background-color: transparent;
+    transition: opacity 0.4s
+}
+/* Модульное окно */
+#modalContent {
+    position: relative;
+    background-color: white;
+    margin: auto;
+    padding: 0;
+    border-radius: 10px;
+    width: 80%;
+    height: 100%;
+    top: -300px;
+    box-shadow: 0 0 40px 10px rgba(0,0,0,0.75);
+    transition: top 0.4s;
+}
+.closeModalWindow {
+    position: absolute;
+    top: -10px;
+    right: -40px;
+    color: var(--cesium-white);
+    opacity: 0.4;
+    font-family: sans-serif;
+    font-size: 44px;
+    text-decoration: none;
+    transition: opacity 0.15s ease-in-out;
+}
+.closeModalWindow:hover, .closeModalWindow:focus {
+    opacity: 0.9;
+    cursor: pointer;
+}
+.modalHeader {
+    height: 10%;
+    padding: 2px 16px;
+    background-color: var(--cesium-black);
+    color: white;
+}
+.modalBody {
+    height: 100%;
+    border-radius: 10px;
+    transform: translateZ(0px);
+    overflow: hidden;
+}
+.modalBody > iframe {
+    width: 100%;
+    height: 100%;
+    border: 0;
+} 
+
+#modalBackground {
+    display: block;
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    background-color: rgba(0,0,0,0.5);
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    z-index: -1;
+    transition: opacity 400ms ease;
+}
+#changeLanguage {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    top: 5px;
+    left: 70px;
+    overflow: hidden;
+    color: var(--cesium-white);
+    cursor: pointer;
+    z-index: 1;
+}
+#langsMenu {
+    position: absolute;
+    top: 48px;
+    left: 70px;
+    /*display: none;*/
+    visibility: visible;
+    transition: 0.5s ease-in;
+    z-index: 1;
+}
+#changeLanguage img, #langsMenu img {
+    display: inline-block;
+    height: 20px;
+    width: auto;
+    margin: auto;
+    padding: 0;
+}
+/*#langButton {
+    transform: translate(-20px)
+}*/
+#langsMenu:hover {
+    background: #303336;
+    border: 1px solid #444;
+}
+#langsMenu td {
+    padding: 10px 2px;
+}
+#langsMenu td a {
+  color: white;
+  padding: 0 5px;
+  text-decoration: none;
+}
+#langsMenu td:hover {
+    background:#48b;
+}
+#pickedLang {
+  font-weight: bold;
+  /*border-bottom: 1px solid #444;*/
+}
+.cesium-toolbar-button img {
+    width:20px;
+    height:auto;
+    vertical-align: middle;
+}
